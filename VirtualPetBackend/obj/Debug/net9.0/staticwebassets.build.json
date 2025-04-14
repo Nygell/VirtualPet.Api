@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Se4uR9mDbLGuZarVb83dXx99ZoPp+c4Y3YgSQ2l7og8=",
+  "Source": "VirtualPetBackend",
+  "BasePath": "_content/VirtualPetBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
