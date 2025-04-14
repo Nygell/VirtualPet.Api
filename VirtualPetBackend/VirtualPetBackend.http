@@ -1,6 +1,11 @@
-@VirtualPetBackend_HostAddress = http://localhost:5140
 
-GET {{VirtualPetBackend_HostAddress}}/weatherforecast/
-Accept: application/json
+POST http://localhost:5140/pets
+Content-Type: application/json
+
+{
+    "name": "Fluffy"
+}
 
 ###
+
+GET http://localhost:5140/pets
