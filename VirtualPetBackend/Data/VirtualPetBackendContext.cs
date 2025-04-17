@@ -6,4 +6,5 @@ namespace VirtualPetBackend.Data;
 public class VirtualPetBackendContext(DbContextOptions<VirtualPetBackendContext> options) : DbContext(options)
 {
     public DbSet<Pet> Pets => Set<Pet>();
+    public DbSet<UserEntity> Users => Set<UserEntity>();
 }

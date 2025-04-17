@@ -34,8 +34,7 @@ public static class PetMapping
         {
             Id = id,
             Name = createPetDTO.Name,
-            CreatedAt = DateTime.UtcNow,
-            Age = 0
+            CreatedAt = DateTime.UtcNow
         };
     } 
 }
