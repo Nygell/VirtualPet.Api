@@ -1,11 +1,20 @@
 
-POST http://localhost:5140/pets
+POST http://localhost:5140/user
 Content-Type: application/json
 
 {
-    "name": "Fluffy"
+  "username": "Penny2",
+  "password": "hunter3",
+  "petSpriteId": 2
 }
 
 ###
 
-GET http://localhost:5140/pets
+POST http://localhost:5140/user/login
+Content-Type: application/json
+
+{
+  "username": "Penny2",
+  "password": "hunter3"
+}
+
