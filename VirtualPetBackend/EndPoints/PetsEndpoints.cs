@@ -33,9 +33,27 @@ public static class PetsEndpoints
         })
         .WithName("DeletePetById");
 
-        group.MapPost("/", async (CreatePetDTO createPetDTO, VirtualPetBackendContext db) =>
+        group.MapPost("/", async (CreatePetDTO createPetDTO, VirtualPetBackendContext db, HttpContext context) =>
         {
-            var pet = createPetDTO.MapToEntity(db.Pets.Local.Count + 1);
+            var userId = context.User.FindFirst("id")?.Value;
+            if (userId == null)
+                return Results.Unauthorized();
+
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            if (user == null)
+                return Results.NotFound("User not found");
+
+            if (await db.Pets.AnyAsync(p => p.UserId == user.Id))
+                return Results.Conflict("User already has a pet");
+
+            var pet = new Pet
+            {
+                Name = createPetDTO.Name,
+                UserId = user.Id,
+                SpriteId = createPetDTO.SpriteId,
+                CreatedAt = DateTime.UtcNow
+            };
+
             await db.Pets.AddAsync(pet);
             await db.SaveChangesAsync();
 

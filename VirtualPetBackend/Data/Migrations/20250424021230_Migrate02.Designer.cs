@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualPetBackend.Data;
 
@@ -10,9 +11,11 @@ using VirtualPetBackend.Data;
 namespace VirtualPetBackend.Data.Migrations
 {
     [DbContext(typeof(VirtualPetBackendContext))]
-    partial class VirtualPetBackendContextModelSnapshot : ModelSnapshot
+    [Migration("20250424021230_Migrate02")]
+    partial class Migrate02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -42,15 +45,9 @@ namespace VirtualPetBackend.Data.Migrations
                     b.Property<int>("SpriteId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SpriteId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Pets");
                 });
@@ -72,20 +69,6 @@ namespace VirtualPetBackend.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PetSprite");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ImagePath = "/images/rat1.png",
-                            Name = "Default Rat"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ImagePath = "/images/rat2.png",
-                            Name = "Fancy Rat"
-                        });
                 });
 
             modelBuilder.Entity("VirtualPetBackend.Entities.UserEntity", b =>
@@ -103,6 +86,9 @@ namespace VirtualPetBackend.Data.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("PetId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PetSpriteId")
                         .HasColumnType("INTEGER");
 
@@ -115,6 +101,8 @@ namespace VirtualPetBackend.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PetId");
+
                     b.ToTable("Users");
                 });
 
@@ -126,19 +114,15 @@ namespace VirtualPetBackend.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VirtualPetBackend.Entities.UserEntity", "User")
-                        .WithOne("Pet")
-                        .HasForeignKey("VirtualPetBackend.Entities.Pet", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Sprite");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VirtualPetBackend.Entities.UserEntity", b =>
                 {
+                    b.HasOne("VirtualPetBackend.Entities.Pet", "Pet")
+                        .WithMany()
+                        .HasForeignKey("PetId");
+
                     b.Navigation("Pet");
                 });
 #pragma warning restore 612, 618

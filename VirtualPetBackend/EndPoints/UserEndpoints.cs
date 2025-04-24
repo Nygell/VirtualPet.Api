@@ -35,8 +35,8 @@ public static class UserEndpoints
 
         group.MapPost("/login", async (LoginUser.LoginRequest loginRequest, LoginUser useCase) =>
         {
-            await useCase.Handle(loginRequest);
-            return Results.Ok();
+            var response = await useCase.Handle(loginRequest);
+            return Results.Ok(response);
         });
     }
 }

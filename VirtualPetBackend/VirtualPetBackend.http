@@ -3,18 +3,34 @@ POST http://localhost:5140/user
 Content-Type: application/json
 
 {
-  "username": "Penny2",
+  "username": "Penny4",
   "password": "hunter3",
   "petSpriteId": 2
 }
 
 ###
-
+# @name Login
 POST http://localhost:5140/user/login
 Content-Type: application/json
 
 {
-  "username": "Penny2",
+  "username": "Penny4",
   "password": "hunter3"
+}
+
+###
+GET http://localhost:5140/user
+Content-Type: application/json
+
+
+###
+
+POST http://localhost:5140/pets
+Content-Type: application/json
+Authorization: Bearer {{Login.response.body.token}}
+
+{
+  "name": "Fluffy",
+  "spriteId": 1
 }
 
