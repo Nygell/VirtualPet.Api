@@ -9,7 +9,7 @@ public class UserEntity
     public required string Username { get; set; }
     public string? PasswordHash { get; set; }
     public string? Role { get; set; }
-    public required int PetSpriteId { get; set; }
+    public int PetSpriteId { get; set; }
     public Pet? Pet { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime LastLogin { get; set; } = DateTime.UtcNow;

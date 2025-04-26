@@ -39,11 +39,13 @@ public static class PetsEndpoints
             if (userId == null)
                 return Results.Unauthorized();
 
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            var user = await db.Users
+                .Include(u => u.Pet)
+                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
             if (user == null)
                 return Results.NotFound("User not found");
 
-            if (await db.Pets.AnyAsync(p => p.UserId == user.Id))
+            if (user.Pet != null)
                 return Results.Conflict("User already has a pet");
 
             var pet = new Pet
@@ -54,7 +56,7 @@ public static class PetsEndpoints
                 CreatedAt = DateTime.UtcNow
             };
 
-            await db.Pets.AddAsync(pet);
+            user.Pet = pet;
             await db.SaveChangesAsync();
 
             return Results.Created($"/pets/{pet.Id}", pet.MapToPetDto());

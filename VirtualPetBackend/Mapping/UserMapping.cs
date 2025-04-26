@@ -7,16 +7,29 @@ namespace VirtualPetBackend.Mapping;
 
 public static class UserMapping
 {
-    public static UserEntity MapToUserEntity(this CreateUserDTO createUserDTO, int petId)
+    public static UserEntity MapToUserEntity(this CreateUserDTO createUserDTO)
     {
         return new UserEntity
         {
             
             Username = createUserDTO.Username,
             PasswordHash = createUserDTO.Password, // This should be hashed in the service layer
-            PetSpriteId = petId,
             CreatedAt = DateTime.UtcNow,
-            LastLogin = DateTime.UtcNow
+            LastLogin = DateTime.UtcNow,
+            Role = createUserDTO.Role
+        };
+    }
+
+    public static UserDetailsDTO MapToUserDetailsDTO(this UserEntity userEntity)
+    {
+        return new UserDetailsDTO
+        {
+            Id = userEntity.Id,
+            Username = userEntity.Username,
+            Role = userEntity.Role ?? "User",
+            CreatedAt = userEntity.CreatedAt,
+            LastLogin = userEntity.LastLogin,
+            PetName = userEntity.Pet?.Name
         };
     }
 }

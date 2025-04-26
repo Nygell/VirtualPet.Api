@@ -3,9 +3,9 @@ POST http://localhost:5140/user
 Content-Type: application/json
 
 {
-  "username": "Penny4",
-  "password": "hunter3",
-  "petSpriteId": 2
+  "username": "Penny",
+  "password": "hunter1",
+  "role": "Admin"
 }
 
 ###
@@ -14,8 +14,8 @@ POST http://localhost:5140/user/login
 Content-Type: application/json
 
 {
-  "username": "Penny4",
-  "password": "hunter3"
+  "username": "Penny",
+  "password": "hunter1"
 }
 
 ###

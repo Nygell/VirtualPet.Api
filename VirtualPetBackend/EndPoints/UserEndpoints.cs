@@ -14,12 +14,15 @@ public static class UserEndpoints
 
         group.MapGet("/", async (VirtualPetBackendContext db) =>
         {
-            return await db.Users.ToListAsync();
+            return await db.Users
+                .Include(u => u.Pet)
+                .Select(u => u.MapToUserDetailsDTO())
+                .ToListAsync();
         });
 
         group.MapPost("/", async (VirtualPetBackendContext db, CreateUserDTO createUserDto, IPasswordHelper passwordHelper) =>
         {
-            var user = createUserDto.MapToUserEntity(createUserDto.PetSpriteId);
+            var user = createUserDto.MapToUserEntity();
 
             if (await db.Users.AnyAsync(u => u.Username == user.Username))
             {
