@@ -1,4 +1,6 @@
 using System;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using VirtualPetBackend.Data;
 using VirtualPetBackend.DTOs;
@@ -41,5 +43,19 @@ public static class UserEndpoints
             var response = await useCase.Handle(loginRequest);
             return Results.Ok(response);
         });
+
+        group.MapDelete("/{id}", [Authorize(Roles = "Admin")] async (int id, VirtualPetBackendContext db, HttpContext context) =>
+        {
+
+            var user = await db.Users.FindAsync(id);
+            if (user == null)
+                return Results.NotFound("User not found");
+
+            db.Users.Remove(user);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        });
     }
+
+
 }

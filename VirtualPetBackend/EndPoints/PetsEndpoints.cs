@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using VirtualPetBackend.Data;
 using VirtualPetBackend.DTOs;
@@ -33,15 +34,13 @@ public static class PetsEndpoints
         })
         .WithName("DeletePetById");
 
-        group.MapPost("/", async (CreatePetDTO createPetDTO, VirtualPetBackendContext db, HttpContext context) =>
+        group.MapPost("/", [Authorize] async (CreatePetDTO createPetDTO, VirtualPetBackendContext db, HttpContext context) =>
         {
             var userId = context.User.FindFirst("id")?.Value;
-            if (userId == null)
-                return Results.Unauthorized();
 
             var user = await db.Users
                 .Include(u => u.Pet)
-                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId!));
             if (user == null)
                 return Results.NotFound("User not found");
 
@@ -63,6 +62,5 @@ public static class PetsEndpoints
         });
 
         return group;
-
     }
 }

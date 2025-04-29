@@ -3,9 +3,9 @@ POST http://localhost:5140/user
 Content-Type: application/json
 
 {
-  "username": "Penny",
-  "password": "hunter1",
-  "role": "Admin"
+  "username": "Penny2",
+  "password": "hunter2",
+  "role": "User"
 }
 
 ###
@@ -34,3 +34,11 @@ Authorization: Bearer {{Login.response.body.token}}
   "spriteId": 1
 }
 
+###
+DELETE http://localhost:5140/user/1
+Content-Type: application/json
+Authorization: Bearer {{Login.response.body.token}}
+
+{
+  "id": 1
+}

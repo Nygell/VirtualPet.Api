@@ -46,21 +46,14 @@ public class PasswordHelper : IPasswordHelper
 
 
 
-public sealed class LoginUser
+public sealed class LoginUser(
+    VirtualPetBackendContext db,
+    IPasswordHelper passwordHelper,
+    IOptions<JwtSettings> jwtSettings)
 {
-    private readonly VirtualPetBackendContext _db;
-    private readonly IPasswordHelper _passwordHelper;
-    private readonly JwtSettings _jwtSettings;
-
-    public LoginUser(
-        VirtualPetBackendContext db, 
-        IPasswordHelper passwordHelper,
-        IOptions<JwtSettings> jwtSettings)
-    {
-        _db = db;
-        _passwordHelper = passwordHelper;
-        _jwtSettings = jwtSettings.Value;
-    }
+    private readonly VirtualPetBackendContext _db = db;
+    private readonly IPasswordHelper _passwordHelper = passwordHelper;
+    private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     public record LoginRequest(string Username, string Password);
     public record LoginResponse(string Token);
@@ -94,13 +87,13 @@ public sealed class LoginUser
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-            new Claim("id", user.Id.ToString())
+            new Claim("id", user.Id.ToString()),
+            new Claim("role", user.Role ?? "User")
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); // Changed from HmacSha512
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,
