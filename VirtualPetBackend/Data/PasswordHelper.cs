@@ -56,7 +56,7 @@ public sealed class LoginUser(
     private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
     public record LoginRequest(string Username, string Password);
-    public record LoginResponse(string Token);
+    public record LoginResponse(string Token, long TokenExpiration);
 
     public async Task<LoginResponse> Handle(LoginRequest request)
     {
@@ -80,16 +80,16 @@ public sealed class LoginUser(
         }
 
         var token = GenerateJwtToken(user);
-        return new LoginResponse(token);
+        return new LoginResponse(token, DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds());
     }
 
     private string GenerateJwtToken(UserEntity user)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+            new Claim(ClaimTypes.Name, user.Username),
             new Claim("id", user.Id.ToString()),
-            new Claim("role", user.Role ?? "User")
+            new Claim(ClaimTypes.Role, user.Role ?? "User")
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
