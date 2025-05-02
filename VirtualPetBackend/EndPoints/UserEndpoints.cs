@@ -22,7 +22,7 @@ public static class UserEndpoints
                 .ToListAsync();
         });
 
-        group.MapPost("/", async (VirtualPetBackendContext db, CreateUserDTO createUserDto, IPasswordHelper passwordHelper) =>
+        group.MapPost("/register", async (VirtualPetBackendContext db, CreateUserDTO createUserDto, IPasswordHelper passwordHelper) =>
         {
             var user = createUserDto.MapToUserEntity();
 
@@ -40,13 +40,21 @@ public static class UserEndpoints
 
         group.MapPost("/login", async (LoginUser.LoginRequest loginRequest, LoginUser useCase) =>
         {
-            var response = await useCase.Handle(loginRequest);
-            return Results.Ok(response);
+            try
+            {
+                var response = await useCase.Handle(loginRequest);
+                return Results.Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return Results.Unauthorized();
+            }
+            
         });
 
         group.MapDelete("/{id}", [Authorize(Roles = "Admin")] async (int id, VirtualPetBackendContext db, HttpContext context) =>
         {
-
+            
             var user = await db.Users.FindAsync(id);
             if (user == null)
                 return Results.NotFound("User not found");

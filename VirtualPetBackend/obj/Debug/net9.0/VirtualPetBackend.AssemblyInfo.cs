@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VirtualPetBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f2ddc0c422ae990a256fb5d203fb2afc9cd2097")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+78e9a115b4c31ae186d60bb627fc16d8c85cbf16")]
 [assembly: System.Reflection.AssemblyProductAttribute("VirtualPetBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VirtualPetBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
