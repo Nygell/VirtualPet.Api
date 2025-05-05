@@ -20,11 +20,17 @@ public static class PetsEndpoints
         })
         .WithName("GetAllPets");
 
-        group.MapGet("/{id}", async (int id, VirtualPetBackendContext db) =>
+        group.MapGet("/{userId}", async (int userId, VirtualPetBackendContext db) =>
         {
-            return await db.Pets.FindAsync(id) is Pet pet ? Results.Ok(pet.MapToPetDto) : Results.NotFound();
+            var pet = await db.Pets
+                .Include(p => p.Sprite)
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            return pet != null ? 
+                Results.Ok(pet.MapToPetDto()) : 
+                Results.NotFound("No pet found for this user");
         })
-        .WithName("GetPetById");
+        .WithName("GetPetByUserId");
 
         group.MapDelete("/{id}", async (int id, VirtualPetBackendContext db) =>
         {
